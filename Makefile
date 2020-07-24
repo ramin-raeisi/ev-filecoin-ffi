@@ -7,14 +7,13 @@ all: $(DEPS)
 # each of the deps
 $(DEPS): .install-filcrypto  ;
 
-.install-filcrypto: rust
-	./install-filcrypto
+.install-filcrypto: ./install-filcrypto
 	@touch $@
 
 clean:
 	rm -rf $(DEPS) .install-filcrypto
 	rm -f ./runner
-	cd rust && cargo clean && cd ..
+	rm -rf libs/cpp-fil-proofs/build
 .PHONY: clean
 
 go-lint: $(DEPS)
