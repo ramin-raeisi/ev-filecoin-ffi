@@ -7,6 +7,8 @@ if [ -n "${GITHUB_TOKEN}" ]; then
     auth_header=("-H" "Authorization: token ${GITHUB_TOKEN}")
 fi
 
+echo "!!!!!!!"
+
 # set CWD to the root of filecoin-ffi
 #
 cd "$(dirname "${BASH_SOURCE[0]}")"
@@ -14,7 +16,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 # tracks where the C++ sources are were we to build locally instead of
 # downloading from GitHub Releases
 #
-prover_sources_dir="libs/cpp-fil-proofs"
+prover_sources_dir="libs/cpp-fil-proofs/"
 
 main() {
     local __release_type="Release"

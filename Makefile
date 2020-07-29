@@ -7,7 +7,8 @@ all: $(DEPS)
 # each of the deps
 $(DEPS): .install-filcrypto  ;
 
-.install-filcrypto: ./install-filcrypto
+.install-filcrypto: 
+	./install-filcrypto
 	@touch $@
 
 clean:
