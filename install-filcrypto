@@ -56,7 +56,18 @@ build_from_source() {
     mkdir -p ${__cpp_sources_path}/build && cd ${__cpp_sources_path}/build
 
     cmake -DCMAKE_BUILD_TYPE=${__release_type} ..
-    cmake --build . --target filecoin_filecoin-proofs -- -j4;
+
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        cmake --build . --target filecoin_proofs -- -j$nproc;
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        cmake --build . --target filecoin_proofs -- -j$(sysctl -n hw.logicalcpu);
+    elif [[ "$OSTYPE" == "cygwin" ]]; then
+       cmake --build . --target filecoin_proofs -- -j$nproc; 
+    elif [[ "$OSTYPE" == "msys" ]]; then
+        cmake --build . --target filecoin_proofs -- -j$nproc;
+    elif [[ "$OSTYPE" == "freebsd"* ]]; then
+        cmake --build . --target filecoin_proofs -- -j$(sysctl -n hw.logicalcpu);
+    fi
 }
 
 check_installed_files() {
