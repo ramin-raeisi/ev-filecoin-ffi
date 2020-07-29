@@ -7,14 +7,13 @@ all: $(DEPS)
 # each of the deps
 $(DEPS): .install-filcrypto  ;
 
-.install-filcrypto: rust
-	./install-filcrypto
+.install-filcrypto: ./install-filcrypto
 	@touch $@
 
 clean:
 	rm -rf $(DEPS) .install-filcrypto
 	rm -f ./runner
-	cd rust && cargo clean && cd ..
+	rm -rf libs/cpp-fil-proofs/build
 .PHONY: clean
 
 go-lint: $(DEPS)
@@ -31,7 +30,7 @@ cgo-leakdetect: runner
 .PHONY: cgo-leakdetect
 
 cgo-gen: $(DEPS)
-	c-for-go --ccincl --ccdefs --nostamp filcrypto.yml
+	go run github.com/xlab/c-for-go --nostamp filcrypto.yml
 .PHONY: cgo-gen
 
 runner: $(DEPS)

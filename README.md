@@ -9,10 +9,10 @@
 Get the source, add this repo as a submodule to your repo, build it and point to it:
 
 ```shell
-$ go get github.com/filecoin-project/filecoin-ffi
-$ git submodule add https://github.com/filecoin-project/filecoin-ffi.git extern/filecoin-ffi
+$ go get github.com/nilfoundation/filecoin-ffi
+$ git submodule add https://github.com/nilfoundation/filecoin-ffi.git extern/filecoin-ffi
 $ make -C extern/filecoin-ffi
-$ go mod edit -replace=github.com/filecoin-project/filecoin-ffi=./extern/filecoin-ffi
+$ go mod edit -replace=github.com/nilfoundation/filecoin-ffi=./extern/filecoin-ffi
 ```
 
 ## Updating CGO Bindings
@@ -25,5 +25,3 @@ will fail if generated CGO diverges from what's checked into Git.
 ## License
 
 MIT or Apache 2.0
-
-[1]: https://github.com/filecoin-project/rust-filecoin-proofs-api/commit/61fde0e581cc38abc4e13dbe96145c9ad2f1f0f5
