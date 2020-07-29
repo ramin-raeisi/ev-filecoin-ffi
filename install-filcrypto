@@ -17,7 +17,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 prover_sources_dir="libs/cpp-fil-proofs"
 
 main() {
-    local __release_type=$(get_release_type)
+    local __release_type="Release"
     (>&2 echo "[install-filcrypto/main] building libfilcrypto from local sources (dir = ${prover_sources_dir})")
 
     # build libfilcrypto (and corresponding header and pkg-config)
