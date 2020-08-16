@@ -43,7 +43,6 @@ build_from_source() {
     local __release_type=$3
     local __repo_sha1=$(git rev-parse HEAD)
     local __repo_sha1_truncated="${__repo_sha1:0:16}"
-    local __target_feature=""
 
     (>&2 echo "building from source @ ${__repo_sha1_truncated}")
 
