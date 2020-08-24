@@ -11,31 +11,54 @@ fi
 #
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
+# tracks where the Rust sources are were we to build locally instead of
+# downloading from GitHub Releases
+#
+rust_sources_dir="rust"
+
 # tracks where the C++ sources are were we to build locally instead of
 # downloading from GitHub Releases
 #
-prover_sources_dir="libs/cpp-fil-proofs"
+cpp_sources_dir="libs/cpp-fil-proofs"
+
+# an array of values passed as 'target-feature' to the Rust compiler if we're
+# building an optimized libfilcrypto (which takes advantage of some perf-boosting
+# instruction sets)
+#
+#optimized_release_rustc_target_features=$(jq -r '.[].rustc_target_feature' < "${rust_sources_dir}/rustc-target-features-optimized.json")
+
+# each value in this area is checked against the "features" of the hosts CPU
+# in order to determine if the host is suitable for an optimized release
+#
+cpu_features_required_for_optimized_release=$(jq -r '.[].check_cpu_for_feature | select(. != null)' <"${rust_sources_dir}/rustc-target-features-optimized.json")
 
 main() {
     local __release_type=$(get_release_type)
-    (>&2 echo "[install-filcrypto/main] building libfilcrypto from local sources (dir = ${prover_sources_dir})")
+    (echo >&2 "[install-filcrypto/main] building libfilcrypto from local sources (dir = ${cpp_sources_dir})")
 
     # build libfilcrypto (and corresponding header and pkg-config)
     #
-    build_from_source "filcrypto" "${prover_sources_dir}" "${__release_type}"
+    build_from_cpp_source "filcrypto" "${cpp_sources_dir}" "${__release_type}"
+    build_from_rust_source "filcrypto" "${rust_sources_dir}" "${__release_type}"
 
     # copy from CMake's build directory (target) to root of filecoin-ffi
     #
-    find -L "${prover_sources_dir}/target/release" -type f -name filcrypto.h -exec cp -- "{}" . \;
-    find -L "${prover_sources_dir}/target/release" -type f -name libfilcrypto.a -exec cp -- "{}" . \;
-    find -L "${prover_sources_dir}" -type f -name filcrypto.pc -exec cp -- "{}" . \;
+    find -L "${cpp_sources_dir}/build/release" -type f -name filcrypto.h -exec cp -- "{}" . \;
+    find -L "${cpp_sources_dir}/build/release" -type f -name libfilcrypto.a -exec cp -- "{}" . \;
+    find -L "${cpp_sources_dir}" -type f -name filcrypto.pc -exec cp -- "{}" . \;
+
+    # copy from Rust's build directory (target) to root of filecoin-ffi
+    #
+    find -L "${rust_sources_dir}/target/release" -type f -name filcrypto.h -exec cp -- "{}" . \;
+    find -L "${rust_sources_dir}/target/release" -type f -name libfilcrypto.a -exec cp -- "{}" . \;
+    find -L "${rust_sources_dir}" -type f -name filcrypto.pc -exec cp -- "{}" . \;
 
     check_installed_files
 
-    (>&2 echo "[install-filcrypto/main] successfully built and installed libfilcrypto from source")
+    (echo >&2 "[install-filcrypto/main] successfully built and installed libfilcrypto from source")
 }
 
-build_from_source() {
+build_from_cpp_source() {
     local __library_name=$1
     local __cpp_sources_path=$2
     local __release_type=$3
@@ -43,11 +66,11 @@ build_from_source() {
     local __repo_sha1_truncated="${__repo_sha1:0:16}"
     local __target_feature=""
 
-    (>&2 echo "building from source @ ${__repo_sha1_truncated}")
+    (echo >&2 "building from source @ ${__repo_sha1_truncated}")
 
     if ! [ -x "$(command -v cmake)" ]; then
-        (>&2 echo '[build_from_source] Error: CMake is not installed.')
-        (>&2 echo '[build_from_source] install CMake (https://cmake.org) to resolve this problem.')
+        (echo >&2 '[build_from_cpp_source] Error: CMake is not installed.')
+        (echo >&2 '[build_from_cpp_source] install CMake (https://cmake.org) to resolve this problem.')
         exit 1
     fi
 
@@ -56,24 +79,106 @@ build_from_source() {
     mkdir -p ${__cpp_sources_path}/build && cd ${__cpp_sources_path}/build
 
     cmake -DCMAKE_BUILD_TYPE=${__release_type} ..
-    cmake --build . --target filecoin_filecoin-proofs -- -j4;
+    cmake --build . --target filecoin_filecoin-proofs -- -j4
+}
+
+build_from_rust_source() {
+    local __library_name=$1
+    local __rust_sources_path=$2
+    local __release_flags=$3
+    local __repo_sha1=$(git rev-parse HEAD)
+    local __repo_sha1_truncated="${__repo_sha1:0:16}"
+
+    (echo >&2 "building from source @ ${__repo_sha1_truncated}")
+
+    if ! [ -x "$(command -v cargo)" ]; then
+        (echo >&2 '[build_from_source] Error: cargo is not installed.')
+        (echo >&2 '[build_from_source] install Rust toolchain to resolve this problem.')
+        exit 1
+    fi
+
+    if ! [ -x "$(command -v rustup)" ]; then
+        (echo >&2 '[build_from_source] Error: rustup is not installed.')
+        (echo >&2 '[build_from_source] install Rust toolchain installer to resolve this problem.')
+        exit 1
+    fi
+
+    pushd "${__rust_sources_path}"
+
+    cargo --version
+
+    if [ -n "${__release_flags}" ]; then
+        RUSTFLAGS="-C target-feature=${__release_flags}" ./scripts/build-release.sh "${__library_name}" "$(cat rust-toolchain)"
+    else
+        ./scripts/build-release.sh "${__library_name}" "$(cat rust-toolchain)"
+    fi
+
+    popd
+}
+
+get_release_flags() {
+    local __features=""
+
+    # determine where to look for CPU features
+    #
+    if [[ ! -f "/proc/cpuinfo" ]]; then
+        (echo >&2 "[get_release_flags] no /proc/cpuinfo file; falling back to Darwin feature detection")
+        __features=$(sysctl -a | grep machdep.cpu | tr '[:upper:]' '[:lower:]' | grep features)
+    else
+        #aarch64_uname=$(uname -a | grep aarch64)
+        x86_64_uname=$(uname -a | grep x86_64)
+        # shellcheck disable=SC2002
+        if [ -n "${x86_64_uname}" ]; then
+            __features=$(cat /proc/cpuinfo | grep flags | head -n 1)
+        else
+            # For now we assume aarch64.  If another supported platform is added, explicitly check for it
+            __features=$(cat /proc/cpuinfo | grep Features | head -n 1)
+        fi
+    fi
+
+    # Maps cpu flag to rust flags (related to entries in rust/rustc-target-features-optimized.json)
+    feature_map=("adx:+adx" "sha_ni:+sha" "sha2:+sha2" "sse2:+sse2" "avx2:+avx2" "avx:+avx" "sse4_2:+sse4.2" "sse4_1:+sse4.1")
+
+    target_features=""
+    # check for the presence of each required CPU feature
+    #
+    # shellcheck disable=SC2068 # the splitting is intentional
+    for x in ${cpu_features_required_for_optimized_release[@]}; do
+        current_feature=$(echo "${__features}" | grep -c "${x}")
+        if [ "1" = "${current_feature}" ]; then
+            for feature in "${feature_map[@]}"; do
+                key=${feature%%:*}
+                if [ "${key}" == "${x}" ]; then
+                    val=${feature#*:}
+                    if [ -z "${target_features}" ]; then
+                        target_features="${val}"
+                    else
+                        target_features="${target_features},${val}"
+                    fi
+                fi
+            done
+        fi
+    done
+
+    echo "${target_features}"
 }
 
 check_installed_files() {
     if [[ ! -f "./filcrypto.h" ]]; then
-        (>&2 echo "[check_installed_files] failed to install filcrypto.h")
+        (echo >&2 "[check_installed_files] failed to install filcrypto.h")
         exit 1
     fi
 
     if [[ ! -f "./libfilcrypto.a" ]]; then
-        (>&2 echo "[check_installed_files] failed to install libfilcrypto.a")
+        (echo >&2 "[check_installed_files] failed to install libfilcrypto.a")
         exit 1
     fi
 
     if [[ ! -f "./filcrypto.pc" ]]; then
-        (>&2 echo "[check_installed_files] failed to install filcrypto.pc")
+        (echo >&2 "[check_installed_files] failed to install filcrypto.pc")
         exit 1
     fi
 }
 
-main "$@"; exit
+main "$@"
+exit
