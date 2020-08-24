@@ -33,13 +33,13 @@ cpp_sources_dir="libs/cpp-fil-proofs"
 cpu_features_required_for_optimized_release=$(jq -r '.[].check_cpu_for_feature | select(. != null)' <"${rust_sources_dir}/rustc-target-features-optimized.json")
 
 main() {
-    local __release_type=$(get_release_type)
+    local __release_flags=$(get_release_flags)
     (echo >&2 "[install-filcrypto/main] building libfilcrypto from local sources (dir = ${cpp_sources_dir})")
 
     # build libfilcrypto (and corresponding header and pkg-config)
     #
     #    build_from_cpp_source "filcrypto" "${cpp_sources_dir}" "${__release_type}"
-    build_from_rust_source "filcrypto" "${rust_sources_dir}" "${__release_type}"
+    build_from_rust_source "filcrypto" "${rust_sources_dir}" "${__release_flags}"
 
     # copy from CMake's build directory (target) to root of filecoin-ffi
     #
