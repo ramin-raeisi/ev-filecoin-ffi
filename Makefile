@@ -14,6 +14,7 @@ clean:
 	rm -rf $(DEPS) .install-filcrypto
 	rm -f ./runner
 	rm -rf libs/cpp-fil-proofs/build
+	cd rust && cargo clean && cd ..
 .PHONY: clean
 
 go-lint: $(DEPS)

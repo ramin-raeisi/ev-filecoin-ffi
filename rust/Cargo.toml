@@ -2,7 +2,7 @@
 name = "filcrypto"
 description = "FFI Interface to Filecoin Proofs"
 version = "0.7.5"
-authors = ["laser <l@s3r.com>"]
+authors = ["laser <l@s3r.com>", "Mikhail Komarov <nemo@nil.foundation>"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/nilfoundation/filecoin-ffi"
 readme = "README.md"
@@ -16,7 +16,7 @@ crate-type = ["rlib", "staticlib"]
 bls-signatures = "0.6.0"
 byteorder = "1.2"
 drop_struct_macro_derive = "0.4.0"
-ff = { version = "0.2.1", package = "fff" }
+ff = { git = "https://github.com/nilfoundation/ff", version = "0.2.1", package = "fff" }
 ffi-toolkit = "0.4.0"
 libc = "0.2.58"
 log = "0.4.7"
@@ -26,11 +26,11 @@ rand = "0.7"
 rand_chacha = "0.2.1"
 rayon = "1.2.1"
 anyhow = "1.0.23"
-bellperson = { version = "0.9.2", features = ["gpu"] }
+bellperson = { git = "https://github.com/nilfoundation/bellman", version = "0.9.2", features = ["gpu"] }
 serde_json = "1.0.46"
 
-neptune = "=1.1.1"
-neptune-triton = "=1.0.0"
+neptune = { git = "https://github.com/nilfoundation/neptune", version = "=1.1.1" }
+neptune-triton = { git = "https://github.com/nilfoundation/neptune-triton", version = "=1.0.0" }
 
 [dependencies.filecoin-proofs-api]
 package = "filecoin-proofs-api"
