@@ -7,8 +7,6 @@ if [ -n "${GITHUB_TOKEN}" ]; then
     auth_header=("-H" "Authorization: token ${GITHUB_TOKEN}")
 fi
 
-echo "!!!!!!!"
-
 # set CWD to the root of filecoin-ffi
 #
 cd "$(dirname "${BASH_SOURCE[0]}")"
