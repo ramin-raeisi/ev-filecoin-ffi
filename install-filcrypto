@@ -97,20 +97,14 @@ build_from_rust_source() {
         exit 1
     fi
 
-    if ! [ -x "$(command -v rustup)" ]; then
-        (echo >&2 '[build_from_source] Error: rustup is not installed.')
-        (echo >&2 '[build_from_source] install Rust toolchain installer to resolve this problem.')
-        exit 1
-    fi
-
     pushd "${__rust_sources_path}"
 
     cargo --version
 
     if [ -n "${__release_flags}" ]; then
-        RUSTFLAGS="-C target-feature=${__release_flags}" ./scripts/build-release.sh "${__library_name}" "$(cat rust-toolchain)"
+        RUSTFLAGS="-C target-feature=${__release_flags}" ./scripts/build-release.sh "${__library_name}"
     else
-        ./scripts/build-release.sh "${__library_name}" "$(cat rust-toolchain)"
+        ./scripts/build-release.sh "${__library_name}"
     fi
 
     popd
