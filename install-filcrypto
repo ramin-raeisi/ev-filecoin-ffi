@@ -14,7 +14,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 # tracks where the Rust sources are were we to build locally instead of
 # downloading from GitHub Releases
 #
-rust_sources_dir="rust"
+rust_sources_dir="libs/rust-fil-proofs"
 
 # tracks where the C++ sources are were we to build locally instead of
 # downloading from GitHub Releases
@@ -79,6 +79,7 @@ build_from_cpp_source() {
     mkdir -p ${__cpp_sources_path}/build && cd ${__cpp_sources_path}/build
 
     cmake -DCMAKE_BUILD_TYPE=${__release_type} ..
+    cmake --build . --target tests-multiprecision -- -j4
     cmake --build . --target tests-block -- -j4
     cmake --build . --target tests-codec -- -j4
     cmake --build . --target tests-hash -- -j4
@@ -135,7 +136,8 @@ get_release_flags() {
         fi
     fi
 
-    # Maps cpu flag to rust flags (related to entries in rust/rustc-target-features-optimized.json)
+    # Maps cpu flag to rust-fil-proofs flags (related to entries in libs/rust-fil-proofs/rustc-target-features-optimized
+    # .json)
     feature_map=("adx:+adx" "sha_ni:+sha" "sha2:+sha2" "sse2:+sse2" "avx2:+avx2" "avx:+avx" "sse4_2:+sse4.2" "sse4_1:+sse4.1")
 
     target_features=""

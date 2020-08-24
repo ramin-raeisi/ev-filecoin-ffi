@@ -83,31 +83,31 @@ jobs:
       - prepare:
           linux: false
           darwin: true
-      - run: cd rust && rustup install $(cat rust-toolchain)
-      - run: cd rust && rustup default $(cat rust-toolchain)
-      - run: cd rust && cargo fetch
+      - run: cd libs/rust-fil-proofs && rustup install $(cat rust-fil-proofs-toolchain)
+      - run: cd libs/rust-fil-proofs && rustup default $(cat rust-fil-proofs-toolchain)
+      - run: cd libs/rust-fil-proofs && cargo fetch
       - publish_release
   cargo_fetch:
-    executor: rust
+    executor: rust-fil-proofs
     working_directory: /mnt/crate
     steps:
       - configure_environment_variables
       - checkout
       - restore_cache:
           keys:
-            - cargo-v0-{{ checksum "rust/rust-toolchain" }}-{{ checksum "rust/Cargo.toml" }}-{{ checksum "rust/Cargo.lock" }}-{{ arch }}
-      - run: cd rust && rustup install $(cat rust-toolchain)
-      - run: cd rust && rustup default $(cat rust-toolchain)
-      - run: cd rust && rustup component add rustfmt
-      - run: cd rust && rustup component add clippy
-      - run: cd rust && cargo fetch
-      - run: cd rust && rustc +$(cat rust-toolchain) --version
+            - cargo-v0-{{ checksum "rust-fil-proofs/rust-fil-proofs-toolchain" }}-{{ checksum "libs/rust-fil-proofs/Cargo.toml" }}-{{ checksum "libs/rust-fil-proofs/Cargo.lock" }}-{{ arch }}
+      - run: cd libs/rust-fil-proofs && rustup install $(cat rust-toolchain)
+      - run: cd libs/rust-fil-proofs && rustup default $(cat rust-toolchain)
+      - run: cd libs/rust-fil-proofs && rustup component add rustfmt
+      - run: cd libs/rust-fil-proofs && rustup component add clippy
+      - run: cd libs/rust-fil-proofs && cargo fetch
+      - run: cd libs/rust-fil-proofs && rustc +$(cat rust-toolchain) --version
       - persist_to_workspace:
           root: "."
           paths:
-            - rust/Cargo.lock
+            - libs/rust-fil-proofs/Cargo.lock
       - save_cache:
-          key: cargo-v0-{{ checksum "rust/rust-toolchain" }}-{{ checksum "rust/Cargo.toml" }}-{{ checksum "rust/Cargo.lock" }}-{{ arch }}
+          key: cargo-v0-{{ checksum "libs/rust-fil-proofs/rust-toolchain" }}-{{ checksum "libs/rust-fil-proofs/Cargo.toml" }}-{{ checksum "libs/rust-fil-proofs/Cargo.lock" }}-{{ arch }}
           paths:
             - /root/.cargo
             - /root/.rustup
@@ -119,10 +119,10 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - cargo-v0-{{ checksum "rust/rust-toolchain" }}-{{ checksum "rust/Cargo.toml" }}-{{ checksum "rust/Cargo.lock" }}-{{ arch }}
+            - cargo-v0-{{ checksum "libs/rust-fil-proofs/rust-toolchain" }}-{{ checksum "libs/rust-fil-proofs/Cargo.toml" }}-{{ checksum "libs/rust-fil-proofs/Cargo.lock" }}-{{ arch }}
       - run:
           name: Run cargo fmt
-          command: cargo fmt --manifest-path ./rust/Cargo.toml --all -- --check
+          command: cargo fmt --manifest-path ./libs/rust-fil-proofs/Cargo.toml --all -- --check
   clippy:
     executor: rust
     working_directory: /mnt/crate
@@ -131,15 +131,15 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - cargo-v0-{{ checksum "rust/rust-toolchain" }}-{{ checksum "rust/Cargo.toml" }}-{{ checksum "rust/Cargo.lock" }}-{{ arch }}
-      - run: cd rust && rustup install $(cat rust-toolchain)
-      - run: cd rust && rustup default $(cat rust-toolchain)
-      - run: cd rust && rustup component add rustfmt
-      - run: cd rust && rustup component add clippy
-      - run: cd rust && cargo fetch
+            - cargo-v0-{{ checksum "libs/rust-fil-proofs/rust-toolchain" }}-{{ checksum "rust-fil-proofs/Cargo.toml" }}-{{ checksum "libs/rust-fil-proofs/Cargo.lock" }}-{{ arch }}
+      - run: cd libs/rust-fil-proofs && rustup install $(cat rust-toolchain)
+      - run: cd libs/rust-fil-proofs && rustup default $(cat rust-toolchain)
+      - run: cd libs/rust-fil-proofs && rustup component add rustfmt
+      - run: cd libs/rust-fil-proofs && rustup component add clippy
+      - run: cd libs/rust-fil-proofs && cargo fetch
       - run:
           name: Run cargo clippy
-          command: cd rust && cargo +$(cat rust-toolchain) clippy --all-targets --all-features -- -D warnings
+          command: cd libs/rust-fil-proofs && cargo +$(cat rust-toolchain) clippy --all-targets --all-features -- -D warnings
 
 workflows:
   version: 2
@@ -317,7 +317,7 @@ commands:
 
       - run:
           name: Run the Rust tests
-          command: cd rust && FIL_PROOFS_PARAMETER_CACHE="${HOME}/filecoin-proof-parameters/" RUST_LOG=info cargo test --all --release && cd ..
+          command: cd libs/rust-fil-proofs && FIL_PROOFS_PARAMETER_CACHE="${HOME}/filecoin-proof-parameters/" RUST_LOG=info cargo test --all --release && cd ..
           no_output_timeout: 60m
       - run:
           name: Run the Go tests
