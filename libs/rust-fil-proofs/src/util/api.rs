@@ -36,9 +36,9 @@ pub fn init_log_with_file(file: File) -> Option<()> {
 #[no_mangle]
 pub unsafe extern "C" fn fil_get_gpu_devices() -> *mut fil_GpuDeviceResponse {
     catch_panic_response(|| {
-        let n = gpu::get_devices().len();
+        let n = opencl::Device::all().len();
 
-        let devices: Vec<opencl::Device> = opencl::Device::all()
+        let devices: Vec<opencl::Device> = opencl::Device::all().unwrap()
             .iter()
             .map(|d| d.name().unwrap_or_else(|_| "Unknown"))
             .map(|d| {
