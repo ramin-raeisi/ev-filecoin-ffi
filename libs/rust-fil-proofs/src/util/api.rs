@@ -36,11 +36,11 @@ pub fn init_log_with_file(file: File) -> Option<()> {
 #[no_mangle]
 pub unsafe extern "C" fn fil_get_gpu_devices() -> *mut fil_GpuDeviceResponse {
     catch_panic_response(|| {
-        let n = opencl::Device::all().len();
+        let n = opencl::Device::all().unwrap().len();
 
-        let devices: Vec<opencl::Device> = opencl::Device::all().unwrap()
+        let devices: Vec<*const libc::c_char> = opencl::Device::all().unwrap()
             .iter()
-            .map(|d| d.name().unwrap_or_else(|_| "Unknown"))
+            .map(|d| d.name())
             .map(|d| {
                 CString::new(d)
                     .unwrap_or_else(|_| CString::new("Unknown").unwrap())
