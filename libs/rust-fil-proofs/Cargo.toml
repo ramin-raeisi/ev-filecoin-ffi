@@ -13,7 +13,7 @@ publish = false
 crate-type = ["rlib", "staticlib"]
 
 [dependencies]
-bls-signatures = "0.6.0"
+bls-signatures = { git = "https://github.com/nilfoundation/crusty3-bls", version = "0.6.0" }
 byteorder = "1.2"
 drop_struct_macro_derive = "0.4.0"
 ff = { git = "https://github.com/nilfoundation/crusty3-ff", branch = "1-montgomery-multiplication", package = "fff" }
