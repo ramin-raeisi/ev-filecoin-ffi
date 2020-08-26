@@ -78,7 +78,7 @@ build_from_cpp_source() {
 
     mkdir -p ${__cpp_sources_path}/build && cd ${__cpp_sources_path}/build
 
-    cmake -DCMAKE_BUILD_TYPE=${__release_type} ..
+    cmake -DCMAKE_BUILD_TYPE=${__release_type} -DBUILD_TESTS=TRUE ..
     cmake --build . --target tests-multiprecision -- -j4
     cmake --build . --target tests-block -- -j4
     cmake --build . --target tests-codec -- -j4
