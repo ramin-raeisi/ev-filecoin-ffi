@@ -79,13 +79,12 @@ build_from_cpp_source() {
     mkdir -p ${__cpp_sources_path}/build && cd ${__cpp_sources_path}/build
 
     cmake -DCMAKE_BUILD_TYPE=${__release_type} -DBUILD_TESTS=TRUE -DBUILD_SHARED_LIBS=TRUE ..
-    cmake --build . --target tests-multiprecision -- -j4
-    cmake --build . --target tests-block -- -j4
-    cmake --build . --target tests-codec -- -j4
-    cmake --build . --target tests-hash -- -j4
-    cmake --build . --target tests-stream -- -j4
-    cmake --build . --target tests-random -- -j4
-    cmake --build . --target tests-core -- -j4
+    cmake --build . --target tests-multiprecision -- -j$(nproc)
+    cmake --build . --target tests-block -- -j$(nproc)
+    cmake --build . --target tests-codec -- -j$(nproc)
+    cmake --build . --target tests-hash -- -j$(nproc)
+    cmake --build . --target tests-stream -- -j$(nproc)
+    cmake --build . --target tests-core -- -j$(nproc)
 }
 
 build_from_rust_source() {
