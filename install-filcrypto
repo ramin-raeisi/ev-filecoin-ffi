@@ -38,7 +38,7 @@ main() {
 
     # build libfilcrypto (and corresponding header and pkg-config)
     #
-#    build_from_cpp_source "filcrypto" "${cpp_sources_dir}" "Release"
+    build_from_cpp_source "filcrypto" "${cpp_sources_dir}" "Release"
     build_from_rust_source "filcrypto" "${rust_sources_dir}" "${__release_flags}"
 
     # copy from CMake's build directory (target) to root of filecoin-ffi
