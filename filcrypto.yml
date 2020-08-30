@@ -9,7 +9,7 @@ GENERATOR:
     - ../filcrypto.h
   FlagGroups:
     - {name: LDFLAGS, flags: ["-L${SRCDIR}/.. -lfilcrypto"]}
-    - {name: pkg-config, flags: ["${SRCDIR}/../libs/rust-fil-proofs/filcrypto.pc"]}
+    - {name: pkg-config, flags: ["${SRCDIR}/../filcrypto.pc"]}
 
 PARSER:
   Defines:

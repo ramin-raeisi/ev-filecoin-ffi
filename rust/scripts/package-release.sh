@@ -3,8 +3,9 @@
 set -Exeuo pipefail
 
 main() {
-    if [[ -z "$1" ]]; then
-        (echo >&2 '[package-release/main] Error: script requires path to which it will write release (gzipped) tarball, e.g. "/tmp/filecoin-ffi-Darwin-standard.tar.tz"')
+    if [[ -z "$1" ]]
+    then
+        (>&2 echo '[package-release/main] Error: script requires path to which it will write release (gzipped) tarball, e.g. "/tmp/filecoin-ffi-Darwin-standard.tar.tz"')
         exit 1
     fi
 
@@ -15,7 +16,7 @@ main() {
     #
     __tmp_dir=$(mktemp -d)
 
-    (echo >&2 "[package-release/main] preparing release files")
+    (>&2 echo "[package-release/main] preparing release files")
 
     # clean up temp directory on exit
     #
@@ -31,8 +32,7 @@ main() {
     #
     tar -czf $__tarball_output_path $__tmp_dir/*
 
-    (echo >&2 "[package-release/main] release file created: $__tarball_output_path")
+    (>&2 echo "[package-release/main] release file created: $__tarball_output_path")
 }
 
-main "$@"
-exit
+main "$@"; exit

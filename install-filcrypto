@@ -14,7 +14,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 # tracks where the Rust sources are were we to build locally instead of
 # downloading from GitHub Releases
 #
-rust_sources_dir="libs/rust-fil-proofs"
+rust_sources_dir="rust"
 
 # tracks where the C++ sources are were we to build locally instead of
 # downloading from GitHub Releases
