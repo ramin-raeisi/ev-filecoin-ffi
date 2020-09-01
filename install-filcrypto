@@ -38,20 +38,21 @@ main() {
 
     # build libfilcrypto (and corresponding header and pkg-config)
     #
-    build_from_cpp_source "filcrypto" "${cpp_sources_dir}" "Release"
     build_from_rust_source "filcrypto" "${rust_sources_dir}" "${__release_flags}"
-
-    # copy from CMake's build directory (target) to root of filecoin-ffi
-    #
-    #    find -L "${cpp_sources_dir}/build/release" -type f -name filcrypto.h -exec cp -- "{}" . \;
-    #    find -L "${cpp_sources_dir}/build/release" -type f -name libfilcrypto.a -exec cp -- "{}" . \;
-    #    find -L "${cpp_sources_dir}" -type f -name filcrypto.pc -exec cp -- "{}" . \;
 
     # copy from Rust's build directory (target) to root of filecoin-ffi
     #
     find -L "${rust_sources_dir}/target/release" -type f -name filcrypto.h -exec cp -- "{}" . \;
     find -L "${rust_sources_dir}/target/release" -type f -name libfilcrypto.a -exec cp -- "{}" . \;
     find -L "${rust_sources_dir}" -type f -name filcrypto.pc -exec cp -- "{}" . \;
+
+    build_from_cpp_source "filcrypto" "${cpp_sources_dir}" "Release"
+
+    # copy from CMake's build directory (target) to root of filecoin-ffi
+    #
+    #    find -L "${cpp_sources_dir}/build/release" -type f -name filcrypto.h -exec cp -- "{}" . \;
+    #    find -L "${cpp_sources_dir}/build/release" -type f -name libfilcrypto.a -exec cp -- "{}" . \;
+    #    find -L "${cpp_sources_dir}" -type f -name filcrypto.pc -exec cp -- "{}" . \;
 
     check_installed_files
 
@@ -76,7 +77,9 @@ build_from_cpp_source() {
 
     cmake --version
 
-    mkdir -p ${__cpp_sources_path}/build && cd ${__cpp_sources_path}/build
+    mkdir -p ${__cpp_sources_path}/build
+
+    pushd "${__cpp_sources_path}/build"
 
     cmake -DCMAKE_BUILD_TYPE=${__release_type} -DBUILD_TESTS=TRUE -DBUILD_SHARED_LIBS=TRUE ..
     cmake --build . --target tests-multiprecision -- -j$(nproc)
@@ -86,7 +89,7 @@ build_from_cpp_source() {
     cmake --build . --target tests-stream -- -j$(nproc)
     cmake --build . --target tests-core -- -j$(nproc)
 
-    cd "$(dirname "${BASH_SOURCE[0]}")"
+    popd
 }
 
 build_from_rust_source() {
