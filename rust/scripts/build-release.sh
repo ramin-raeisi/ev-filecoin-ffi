@@ -9,12 +9,6 @@ main() {
         exit 1
     fi
 
-    if [[ -z "$2" ]]
-    then
-        (>&2 echo '[build-release/main] Error: script requires a toolchain, e.g. ./build-release.sh +nightly-2019-04-19')
-        exit 1
-    fi
-
     # temporary place for storing build output (cannot use 'local', because
     # 'trap' is not going to have access to variables scoped to this function)
     #
@@ -29,7 +23,7 @@ main() {
     local __rust_flags="--print native-static-libs ${RUSTFLAGS}"
 
     RUSTFLAGS="${__rust_flags}" \
-        cargo +$2 build \
+        cargo build \
         --release ${@:3} 2>&1 | tee ${__build_output_log_tmp}
 
     # parse build output for linker flags

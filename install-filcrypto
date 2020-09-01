@@ -36,6 +36,14 @@ main() {
     local __release_flags=$(get_release_flags)
     (echo >&2 "[install-filcrypto/main] building libfilcrypto from local sources (dir = ${cpp_sources_dir})")
 
+    build_from_cpp_source "filcrypto" "${cpp_sources_dir}" "Release"
+
+    # copy from CMake's build directory (target) to root of filecoin-ffi
+    #
+    #    find -L "${cpp_sources_dir}/build/release" -type f -name filcrypto.h -exec cp -- "{}" . \;
+    #    find -L "${cpp_sources_dir}/build/release" -type f -name libfilcrypto.a -exec cp -- "{}" . \;
+    #    find -L "${cpp_sources_dir}" -type f -name filcrypto.pc -exec cp -- "{}" . \;
+
     # build libfilcrypto (and corresponding header and pkg-config)
     #
     build_from_rust_source "filcrypto" "${rust_sources_dir}" "${__release_flags}"
@@ -45,14 +53,6 @@ main() {
     find -L "${rust_sources_dir}/target/release" -type f -name filcrypto.h -exec cp -- "{}" . \;
     find -L "${rust_sources_dir}/target/release" -type f -name libfilcrypto.a -exec cp -- "{}" . \;
     find -L "${rust_sources_dir}" -type f -name filcrypto.pc -exec cp -- "{}" . \;
-
-    build_from_cpp_source "filcrypto" "${cpp_sources_dir}" "Release"
-
-    # copy from CMake's build directory (target) to root of filecoin-ffi
-    #
-    #    find -L "${cpp_sources_dir}/build/release" -type f -name filcrypto.h -exec cp -- "{}" . \;
-    #    find -L "${cpp_sources_dir}/build/release" -type f -name libfilcrypto.a -exec cp -- "{}" . \;
-    #    find -L "${cpp_sources_dir}" -type f -name filcrypto.pc -exec cp -- "{}" . \;
 
     check_installed_files
 
