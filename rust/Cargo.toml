@@ -16,7 +16,7 @@ crate-type = ["rlib", "staticlib"]
 bls-signatures = { git = "https://github.com/nilfoundation/crusty3-bls", version = "0.6.0" }
 byteorder = "1.2"
 drop_struct_macro_derive = "0.4.0"
-ff = { git = "https://github.com/nilfoundation/crusty3-ff", branch = "1-montgomery-multiplication", package = "fff" }
+ff = { git = "https://github.com/nilfoundation/crusty3-ff.git", rev = "6c3e204", package = "fff" }
 ffi-toolkit = "0.4.0"
 libc = "0.2.58"
 log = "0.4.7"
@@ -42,4 +42,3 @@ cbindgen = "= 0.14.0"
 
 [dev-dependencies]
 tempfile = "3.0.8"
-
