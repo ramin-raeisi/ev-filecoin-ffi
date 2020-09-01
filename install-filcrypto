@@ -86,7 +86,7 @@ build_from_cpp_source() {
     cmake --build . --target tests-stream -- -j$(nproc)
     cmake --build . --target tests-core -- -j$(nproc)
 
-    cd $(dirname "${BASH_SOURCE[0]}")
+    cd "$(dirname "${BASH_SOURCE[0]}")"
 }
 
 build_from_rust_source() {
