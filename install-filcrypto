@@ -43,9 +43,9 @@ main() {
 
     # copy from CMake's build directory (target) to root of filecoin-ffi
     #
-#    find -L "${cpp_sources_dir}/build/release" -type f -name filcrypto.h -exec cp -- "{}" . \;
-#    find -L "${cpp_sources_dir}/build/release" -type f -name libfilcrypto.a -exec cp -- "{}" . \;
-#    find -L "${cpp_sources_dir}" -type f -name filcrypto.pc -exec cp -- "{}" . \;
+    #    find -L "${cpp_sources_dir}/build/release" -type f -name filcrypto.h -exec cp -- "{}" . \;
+    #    find -L "${cpp_sources_dir}/build/release" -type f -name libfilcrypto.a -exec cp -- "{}" . \;
+    #    find -L "${cpp_sources_dir}" -type f -name filcrypto.pc -exec cp -- "{}" . \;
 
     # copy from Rust's build directory (target) to root of filecoin-ffi
     #
@@ -85,6 +85,8 @@ build_from_cpp_source() {
     cmake --build . --target tests-hash -- -j$(nproc)
     cmake --build . --target tests-stream -- -j$(nproc)
     cmake --build . --target tests-core -- -j$(nproc)
+
+    cd $(dirname "${BASH_SOURCE[0]}")
 }
 
 build_from_rust_source() {
