@@ -65,7 +65,7 @@ include(CMDeploy)
 include(CMSetupVersion)
 
 list(APPEND ${CURRENT_PROJECT_NAME}_PUBLIC_HEADERS
-     include/filcrypto.h)
+     include/filcrypto.hpp)
 
 list(APPEND ${CURRENT_PROJECT_NAME}_UNGROUPED_SOURCES
      src/bls/api.cpp
