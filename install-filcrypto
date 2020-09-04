@@ -164,7 +164,7 @@ get_release_flags() {
         fi
     done
 
-    echo "${target_features}+sha"
+    echo "${target_features}"
 }
 
 check_installed_files() {
