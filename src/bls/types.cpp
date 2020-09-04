@@ -23,7 +23,8 @@
 //  IN THE SOFTWARE.
 //---------------------------------------------------------------------------//
 
-#include <filcrypto.h>
+#include <filcrypto.hpp>
+
 /// HashResponse
 void fil_destroy_hash_response(fil_HashResponse *ptr) { delete ptr; }
 

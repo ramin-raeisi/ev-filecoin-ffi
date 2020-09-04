@@ -23,7 +23,7 @@
 //  IN THE SOFTWARE.
 //---------------------------------------------------------------------------//
 
-#include <filcrypto.h>
+#include <filcrypto.hpp>
 
 /// Compute the digest of a message
 ///

@@ -23,10 +23,10 @@
 //  IN THE SOFTWARE.
 //---------------------------------------------------------------------------//
 
-#include <filcrypto.h>
+#include <filcrypto.hpp>
 
-#include <string>
 #include <functional>
+#include <string>
 
 /// TODO: document
 ///
@@ -844,87 +844,85 @@ fil_StringResponse *fil_get_seal_verifying_key_cid(
 /// parameter file used when sealing.
 ///
 fil_StringResponse *fil_get_seal_params_path(
-    fil_RegisteredSealProof registered_proof) {
-  registered_seal_proof_accessor(
-      registered_proof, | p |
-                            {p.cache_params_path().map(
-                                | pb | String::from(pb.to_string_lossy()))})
-}
+    fil_RegisteredSealProof registered_proof){registered_seal_proof_accessor(
+    registered_proof,
+    | p |
+        {p.cache_params_path().map(| pb | String::from(pb.to_string_lossy()))})}
 
 /// Returns the path from which the proofs library expects to find the verifying
 /// key-file used when verifying a seal proof.
 ///
-fil_StringResponse *fil_get_seal_verifying_key_path(fil_RegisteredSealProof registered_proof) {
-  registered_seal_proof_accessor(
-      registered_proof, | p |
-                            {p.cache_verifying_key_path().map(
-                                | pb | String::from(pb.to_string_lossy()))})
-}
+fil_StringResponse *fil_get_seal_verifying_key_path(
+    fil_RegisteredSealProof registered_proof){registered_seal_proof_accessor(
+    registered_proof,
+    | p |
+        {p.cache_verifying_key_path().map(| pb |
+                                          String::from(pb.to_string_lossy()))})}
 
 /// Returns the identity of the circuit for the provided seal proof.
 ///
-fil_StringResponse *fil_get_seal_circuit_identifier(fil_RegisteredSealProof registered_proof) {
-  registered_seal_proof_accessor(registered_proof,
-                                 RegisteredSealProof::circuit_identifier)
-}
+fil_StringResponse *fil_get_seal_circuit_identifier(
+    fil_RegisteredSealProof registered_proof){
+    registered_seal_proof_accessor(registered_proof,
+                                   RegisteredSealProof::circuit_identifier)}
 
 /// Returns the version of the provided seal proof type.
 ///
-fil_StringResponse *fil_get_seal_version(fil_RegisteredSealProof registered_proof) {
-  registered_seal_proof_accessor(registered_proof,
-                                 | p | Ok(format !("{:?}", p)))
-}
+fil_StringResponse *fil_get_seal_version(
+    fil_RegisteredSealProof registered_proof){
+    registered_seal_proof_accessor(registered_proof,
+                                   | p | Ok(format !("{:?}", p)))}
 
 /// Returns the CID of the Groth parameter file for generating a PoSt.
 ///
-fil_StringResponse *fil_get_post_params_cid(fil_RegisteredPoStProof registered_proof) {
-  registered_post_proof_accessor(registered_proof,
-                                 RegisteredPoStProof::params_cid)
-}
+fil_StringResponse *fil_get_post_params_cid(
+    fil_RegisteredPoStProof registered_proof){
+    registered_post_proof_accessor(registered_proof,
+                                   RegisteredPoStProof::params_cid)}
 
 /// Returns the CID of the verifying key-file for verifying a PoSt proof.
 ///
-fil_StringResponse *fil_get_post_verifying_key_cid(fil_RegisteredPoStProof registered_proof) {
-  registered_post_proof_accessor(registered_proof,
-                                 RegisteredPoStProof::verifying_key_cid)
-}
+fil_StringResponse *fil_get_post_verifying_key_cid(
+    fil_RegisteredPoStProof registered_proof){
+    registered_post_proof_accessor(registered_proof,
+                                   RegisteredPoStProof::verifying_key_cid)}
 
 /// Returns the path from which the proofs library expects to find the Groth
 /// parameter file used when generating a PoSt.
 ///
-fil_StringResponse *fil_get_post_params_path(fil_RegisteredPoStProof registered_proof) {
-  registered_post_proof_accessor(
-      registered_proof, | p |
-                            {p.cache_params_path().map(
-                                | pb | String::from(pb.to_string_lossy()))})
-}
+fil_StringResponse *fil_get_post_params_path(
+    fil_RegisteredPoStProof registered_proof){registered_post_proof_accessor(
+    registered_proof,
+    | p |
+        {p.cache_params_path().map(| pb | String::from(pb.to_string_lossy()))})}
 
 /// Returns the path from which the proofs library expects to find the verifying
 /// key-file used when verifying a PoSt proof.
 ///
-fil_StringResponse *fil_get_post_verifying_key_path(fil_RegisteredPoStProof registered_proof) {
-  registered_post_proof_accessor(
-      registered_proof, | p |
-                            {p.cache_verifying_key_path().map(
-                                | pb | String::from(pb.to_string_lossy()))})
-}
+fil_StringResponse *fil_get_post_verifying_key_path(
+    fil_RegisteredPoStProof registered_proof){registered_post_proof_accessor(
+    registered_proof,
+    | p |
+        {p.cache_verifying_key_path().map(| pb |
+                                          String::from(pb.to_string_lossy()))})}
 
 /// Returns the identity of the circuit for the provided PoSt proof type.
 ///
-fil_StringResponse *fil_get_post_circuit_identifier(fil_RegisteredPoStProof registered_proof) {
-  registered_post_proof_accessor(registered_proof,
-                                 RegisteredPoStProof::circuit_identifier)
-}
+fil_StringResponse *fil_get_post_circuit_identifier(
+    fil_RegisteredPoStProof registered_proof){
+    registered_post_proof_accessor(registered_proof,
+                                   RegisteredPoStProof::circuit_identifier)}
 
 /// Returns the version of the provided seal proof.
 ///
-fil_StringResponse *fil_get_post_version(fil_RegisteredPoStProof registered_proof){
-        registered_post_proof_accessor(registered_proof,
-                                       | p | Ok(format !("{:?}", p)))}
+fil_StringResponse *fil_get_post_version(
+    fil_RegisteredPoStProof registered_proof){
+    registered_post_proof_accessor(registered_proof,
+                                   | p | Ok(format !("{:?}", p)))}
 
 fil_StringResponse *registered_seal_proof_accessor(
-    fil_RegisteredSealProof registered_proof, const std::function<std::string
-                                                      (fil_RegisteredSealProof)>& op) {
+    fil_RegisteredSealProof registered_proof,
+    const std::function<std::string(fil_RegisteredSealProof)> &op) {
   let mut response = fil_StringResponse::default();
 
   let rsp : RegisteredSealProof = registered_proof.into();
@@ -944,8 +942,8 @@ fil_StringResponse *registered_seal_proof_accessor(
 }
 
 fil_StringResponse *registered_post_proof_accessor(
-    fil_RegisteredPoStProof registered_proof, std::function<std::string
-                                                                (fil_RegisteredPoStProof)> op) {
+    fil_RegisteredPoStProof registered_proof,
+    std::function<std::string(fil_RegisteredPoStProof)> op) {
   let mut response = fil_StringResponse::default();
 
   let rsp : RegisteredPoStProof = registered_proof.into();
@@ -966,7 +964,7 @@ fil_StringResponse *registered_post_proof_accessor(
 
 /// Deallocates a VerifySealResponse.
 ///
-void fil_destroy_verify_seal_response(fil_VerifySealResponse *ptr){
+void fil_destroy_verify_seal_response(fil_VerifySealResponse *ptr) {
   delete ptr;
 }
 
@@ -976,23 +974,28 @@ void fil_destroy_finalize_ticket_response(fil_FinalizeTicketResponse *ptr) {
 
 /// Deallocates a VerifyPoStResponse.
 ///
-void fil_destroy_verify_winning_post_response(fil_VerifyWinningPoStResponse *ptr) {
+void fil_destroy_verify_winning_post_response(
+    fil_VerifyWinningPoStResponse *ptr) {
   delete ptr;
 }
 
-void fil_destroy_verify_window_post_response(fil_VerifyWindowPoStResponse *ptr) {
+void fil_destroy_verify_window_post_response(
+    fil_VerifyWindowPoStResponse *ptr) {
   delete ptr;
 }
 
-void fil_destroy_generate_winning_post_response(fil_GenerateWinningPoStResponse *ptr) {
+void fil_destroy_generate_winning_post_response(
+    fil_GenerateWinningPoStResponse *ptr) {
   delete ptr;
 }
 
-void fil_destroy_generate_window_post_response(fil_GenerateWindowPoStResponse *ptr) {
+void fil_destroy_generate_window_post_response(
+    fil_GenerateWindowPoStResponse *ptr) {
   delete ptr;
 }
 
-void fil_destroy_generate_winning_post_sector_challenge(fil_GenerateWinningPoStSectorChallenge *ptr) {
+void fil_destroy_generate_winning_post_sector_challenge(
+    fil_GenerateWinningPoStSectorChallenge *ptr) {
   delete ptr;
 }
 
