@@ -111,7 +111,7 @@ build_from_rust_source() {
     cargo --version
 
     if [ -n "${__release_flags}" ]; then
-        RUSTFLAGS="-C target-feature=${__release_flags}" ./scripts/build-release.sh "${__library_name}"
+        RUSTFLAGS="-C rayon_unstable target-feature=${__release_flags}" ./scripts/build-release.sh "${__library_name}"
     else
         ./scripts/build-release.sh "${__library_name}"
     fi
