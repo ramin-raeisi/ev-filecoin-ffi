@@ -6,8 +6,9 @@ use anyhow::{ensure, Result};
 use ffi_toolkit::{c_str_to_pbuf, c_str_to_rust_str};
 use filecoin_proofs_api::{PrivateReplicaInfo, PublicReplicaInfo, SectorId};
 
-use super::types::{fil_PrivateReplicaInfo, fil_PublicReplicaInfo, fil_RegisteredPoStProof};
 use crate::proofs::types::{fil_PoStProof, PoStProof};
+
+use super::types::{fil_PrivateReplicaInfo, fil_PublicReplicaInfo, fil_RegisteredPoStProof};
 
 #[derive(Debug, Clone)]
 struct PublicReplicaInfoTmp {
@@ -16,12 +17,26 @@ struct PublicReplicaInfoTmp {
     pub sector_id: u64,
 }
 
+pub fn init_binded_threadpool() -> Result<(), ()> {
+    use rayon::prelude::*;
+    use thread_binder::ThreadPoolBuilder;
+
+    ThreadPoolBuilder::new()
+        .num_threads(num_cpus::get())
+        .build_global()
+        .expect("Thread pool build failed")?
+}
+
 #[allow(clippy::type_complexity)]
 pub unsafe fn to_public_replica_info_map(
     replicas_ptr: *const fil_PublicReplicaInfo,
     replicas_len: libc::size_t,
 ) -> Result<BTreeMap<SectorId, PublicReplicaInfo>> {
     use rayon::prelude::*;
+
+    if init_binded_threadpool().is_err() {
+        print!("Core-binded threadpool was already initialized");
+    };
 
     ensure!(!replicas_ptr.is_null(), "replicas_ptr must not be null");
 
@@ -68,6 +83,10 @@ pub unsafe fn to_private_replica_info_map(
     replicas_len: libc::size_t,
 ) -> Result<BTreeMap<SectorId, PrivateReplicaInfo>> {
     use rayon::prelude::*;
+
+    if init_binded_threadpool().is_err() {
+        print!("Core-binded threadpool was already initialized");
+    };
 
     ensure!(!replicas_ptr.is_null(), "replicas_ptr must not be null");
 

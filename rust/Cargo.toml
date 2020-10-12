@@ -30,6 +30,8 @@ bellperson = { git = "ssh://git@github.com/nilfoundation/crusty3-zk.git", branch
 serde_json = "1.0.46"
 filecoin-proofs-api = { git = "ssh://git@github.com/nilfoundation/rust-filecoin-proofs-api.git", branch = "master" }
 rust-gpu-tools = { version = "0.1.1" }
+thread_binder = "0.1.0"
+num_cpus = { version = "1" }
 
 neptune = { git = "https://github.com/nilfoundation/crusty3-neptune", branch = "master", features = ["gpu"] }
 neptune-triton = { git = "https://github.com/nilfoundation/crusty3-neptune-triton", version = "1.1.3" }
