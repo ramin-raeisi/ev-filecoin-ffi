@@ -14,7 +14,7 @@ use std::slice::from_raw_parts;
 
 use super::helpers::{c_to_rust_post_proofs, to_private_replica_info_map};
 use super::types::*;
-use crate::util::api::init_log;
+use crate::util::api::{init_log, init_binded_threadpool};
 
 // A byte serialized representation of a vanilla proof.
 pub type VanillaProof = Vec<u8>;
@@ -200,6 +200,10 @@ pub unsafe extern "C" fn fil_seal_pre_commit_phase1(
     catch_panic_response(|| {
         init_log();
 
+        if init_binded_threadpool().is_err() {
+            print!("Core-binded threadpool was already initialized");
+        };
+
         info!("seal_pre_commit_phase1: start");
 
         let public_pieces: Vec<PieceInfo> = from_raw_parts(pieces_ptr, pieces_len)
@@ -252,6 +256,10 @@ pub unsafe extern "C" fn fil_seal_pre_commit_phase2(
 ) -> *mut fil_SealPreCommitPhase2Response {
     catch_panic_response(|| {
         init_log();
+
+        if init_binded_threadpool().is_err() {
+            print!("Core-binded threadpool was already initialized");
+        };
 
         info!("seal_pre_commit_phase2: start");
 
@@ -309,6 +317,10 @@ pub unsafe extern "C" fn fil_seal_commit_phase1(
     catch_panic_response(|| {
         init_log();
 
+        if init_binded_threadpool().is_err() {
+            print!("Core-binded threadpool was already initialized");
+        };
+
         info!("seal_commit_phase1: start");
 
         let mut response = fil_SealCommitPhase1Response::default();
@@ -364,6 +376,10 @@ pub unsafe extern "C" fn fil_seal_commit_phase2(
 ) -> *mut fil_SealCommitPhase2Response {
     catch_panic_response(|| {
         init_log();
+
+        if init_binded_threadpool().is_err() {
+            print!("Core-binded threadpool was already initialized");
+        };
 
         info!("seal_commit_phase2: start");
 
