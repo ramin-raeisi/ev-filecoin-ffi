@@ -32,7 +32,7 @@ pub fn init_log_with_file(file: File) -> Option<()> {
     }
 }
 
-pub fn init_binded_threadpool() -> Result<(), ()> {
+pub fn init_binded_threadpool() -> Result<(), rayon::ThreadPoolBuildError> {
     use rayon::prelude::*;
     use thread_binder::ThreadPoolBuilder;
 
