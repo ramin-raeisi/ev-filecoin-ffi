@@ -14,7 +14,7 @@ use std::slice::from_raw_parts;
 
 use super::helpers::{c_to_rust_post_proofs, to_private_replica_info_map};
 use super::types::*;
-use crate::util::api::{init_log, init_binded_threadpool};
+use crate::util::api::init_log;
 
 // A byte serialized representation of a vanilla proof.
 pub type VanillaProof = Vec<u8>;
