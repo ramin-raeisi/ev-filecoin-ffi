@@ -24,7 +24,7 @@ pub fn init_binded_threadpool() -> Result<(), ()> {
     ThreadPoolBuilder::new()
         .num_threads(num_cpus::get())
         .build_global()
-        .expect("Thread pool build failed")?
+        .expect("Thread pool build failed")
 }
 
 #[allow(clippy::type_complexity)]
