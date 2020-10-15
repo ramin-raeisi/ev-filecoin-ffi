@@ -32,16 +32,6 @@ pub fn init_log_with_file(file: File) -> Option<()> {
     }
 }
 
-pub fn init_binded_threadpool() -> Result<(), rayon::ThreadPoolBuildError> {
-    use rayon::prelude::*;
-    use thread_binder::ThreadPoolBuilder;
-
-    ThreadPoolBuilder::new()
-        .num_threads(num_cpus::get())
-        .build_global()
-        .expect("Thread pool build failed")?
-}
-
 /// Returns an array of strings containing the device names that can be used.
 #[no_mangle]
 pub unsafe extern "C" fn fil_get_gpu_devices() -> *mut fil_GpuDeviceResponse {

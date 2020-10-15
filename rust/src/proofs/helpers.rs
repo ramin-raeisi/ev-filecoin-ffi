@@ -17,14 +17,13 @@ struct PublicReplicaInfoTmp {
     pub sector_id: u64,
 }
 
-pub fn init_binded_threadpool() -> Result<(), ()> {
+pub fn init_binded_threadpool() -> Result<(), rayon::ThreadPoolBuildError> {
     use rayon::prelude::*;
     use thread_binder::ThreadPoolBuilder;
 
     ThreadPoolBuilder::new()
         .num_threads(num_cpus::get())
         .build_global()
-        .expect("Thread pool build failed")
 }
 
 #[allow(clippy::type_complexity)]

@@ -14,7 +14,7 @@ use rayon::prelude::*;
 
 use crate::bls::types;
 use crate::proofs::types::fil_32ByteArray;
-use crate::util::api::init_binded_threadpool;
+use crate::proofs::helpers::init_binded_threadpool;
 
 pub const SIGNATURE_BYTES: usize = 96;
 pub const PRIVATE_KEY_BYTES: usize = 32;
