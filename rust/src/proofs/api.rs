@@ -12,7 +12,7 @@ use std::mem;
 use std::path::PathBuf;
 use std::slice::from_raw_parts;
 
-use super::helpers::{c_to_rust_post_proofs, to_private_replica_info_map};
+use super::helpers::{c_to_rust_post_proofs, to_private_replica_info_map, init_binded_threadpool};
 use super::types::*;
 use crate::util::api::init_log;
 
