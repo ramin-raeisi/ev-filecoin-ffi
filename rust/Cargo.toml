@@ -20,7 +20,7 @@ ff = { git = "https://github.com/nilfoundation/crusty3-ff.git", rev = "6c3e204",
 ffi-toolkit = "0.4.0"
 libc = "0.2.58"
 log = "0.4.7"
-paired = { git = "https://github.com/nilfoundation/crusty3-pairing", version = "0.20.0" }
+paired = { git = "https://github.com/nilfoundation/crusty3-pairing", branch = "master" }
 fil_logger = "0.1.0"
 rand = "0.7"
 rand_chacha = "0.2.1"
