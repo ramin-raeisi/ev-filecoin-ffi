@@ -110,10 +110,17 @@ build_from_rust_source() {
 
     cargo --version
 
-    if [ -n "${__release_flags}" ]; then
-        RUSTFLAGS="--cfg rayon_unstable -C target-feature=${__release_flags}" ./scripts/build-release.sh "${__library_name}"
+    # Add feature specific rust flags as needed here.
+    if [ "${FFI_USE_BLST}" == "1" ]; then
+        additional_flags="--no-default-features --features blst --cfg rayon_unstable"
     else
-        ./scripts/build-release.sh "${__library_name}"
+        additional_flags="--no-default-features --features pairing --cfg rayon_unstable"
+    fi
+
+    if [ -n "${__release_flags}" ]; then
+        RUSTFLAGS="-C target-feature=${__release_flags}" ./scripts/build-release.sh "${__library_name}" "${additional_flags}"
+    else
+        ./scripts/build-release.sh "${__library_name}" "${additional_flags}"
     fi
 
     popd
