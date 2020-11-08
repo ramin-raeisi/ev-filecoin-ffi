@@ -200,9 +200,19 @@ pub unsafe extern "C" fn fil_seal_pre_commit_phase1(
     catch_panic_response(|| {
         init_log();
 
-        if init_binded_threadpool().is_err() {
-            print!("Core-binded threadpool was already initialized");
-        };
+        if std::env::var("FIL_PROOFS_CORE_BINDED_THREADPOOL")
+            .and_then(|v| match v.parse() {
+                Ok(val) => Ok(val),
+                Err(_) => {
+                    error!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
+                    Ok(true)
+                }
+            })
+            .unwrap_or(true) {
+            if init_binded_threadpool().is_err() {
+                print!("Core-binded threadpool was already initialized");
+            };
+        }
 
         info!("seal_pre_commit_phase1: start");
 
@@ -224,7 +234,7 @@ pub unsafe extern "C" fn fil_seal_pre_commit_phase1(
             ticket.inner,
             &public_pieces,
         )
-        .and_then(|output| serde_json::to_vec(&output).map_err(Into::into));
+            .and_then(|output| serde_json::to_vec(&output).map_err(Into::into));
 
         match result {
             Ok(output) => {
@@ -257,9 +267,19 @@ pub unsafe extern "C" fn fil_seal_pre_commit_phase2(
     catch_panic_response(|| {
         init_log();
 
-        if init_binded_threadpool().is_err() {
-            print!("Core-binded threadpool was already initialized");
-        };
+        if std::env::var("FIL_PROOFS_CORE_BINDED_THREADPOOL")
+            .and_then(|v| match v.parse() {
+                Ok(val) => Ok(val),
+                Err(_) => {
+                    error!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
+                    Ok(true)
+                }
+            })
+            .unwrap_or(true) {
+            if init_binded_threadpool().is_err() {
+                print!("Core-binded threadpool was already initialized");
+            };
+        }
 
         info!("seal_pre_commit_phase2: start");
 
@@ -269,7 +289,7 @@ pub unsafe extern "C" fn fil_seal_pre_commit_phase2(
             seal_pre_commit_phase1_output_ptr,
             seal_pre_commit_phase1_output_len,
         ))
-        .map_err(Into::into);
+            .map_err(Into::into);
 
         let result = phase_1_output.and_then(|o| {
             filecoin_proofs_api::seal::seal_pre_commit_phase2::<PathBuf, PathBuf>(
@@ -317,9 +337,19 @@ pub unsafe extern "C" fn fil_seal_commit_phase1(
     catch_panic_response(|| {
         init_log();
 
-        if init_binded_threadpool().is_err() {
-            print!("Core-binded threadpool was already initialized");
-        };
+        if std::env::var("FIL_PROOFS_CORE_BINDED_THREADPOOL")
+            .and_then(|v| match v.parse() {
+                Ok(val) => Ok(val),
+                Err(_) => {
+                    error!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
+                    Ok(true)
+                }
+            })
+            .unwrap_or(true) {
+            if init_binded_threadpool().is_err() {
+                print!("Core-binded threadpool was already initialized");
+            };
+        }
 
         info!("seal_commit_phase1: start");
 
@@ -377,9 +407,19 @@ pub unsafe extern "C" fn fil_seal_commit_phase2(
     catch_panic_response(|| {
         init_log();
 
-        if init_binded_threadpool().is_err() {
-            print!("Core-binded threadpool was already initialized");
-        };
+        if std::env::var("FIL_PROOFS_CORE_BINDED_THREADPOOL")
+            .and_then(|v| match v.parse() {
+                Ok(val) => Ok(val),
+                Err(_) => {
+                    error!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
+                    Ok(true)
+                }
+            })
+            .unwrap_or(true) {
+            if init_binded_threadpool().is_err() {
+                print!("Core-binded threadpool was already initialized");
+            };
+        }
 
         info!("seal_commit_phase2: start");
 
@@ -389,7 +429,7 @@ pub unsafe extern "C" fn fil_seal_commit_phase2(
             seal_commit_phase1_output_ptr,
             seal_commit_phase1_output_len,
         ))
-        .map_err(Into::into);
+            .map_err(Into::into);
 
         let result = scp1o.and_then(|o| {
             filecoin_proofs_api::seal::seal_commit_phase2(
@@ -958,7 +998,7 @@ pub unsafe extern "C" fn fil_generate_window_post_with_vanilla(
             Err(err) => {
                 // If there were faulty sectors, add them to the response
                 if let Some(filecoin_proofs_api::StorageProofsError::FaultySectors(sectors)) =
-                    err.downcast_ref::<filecoin_proofs_api::StorageProofsError>()
+                err.downcast_ref::<filecoin_proofs_api::StorageProofsError>()
                 {
                     let sectors_u64 = sectors
                         .iter()
@@ -1026,7 +1066,7 @@ pub unsafe extern "C" fn fil_generate_window_post(
             Err(err) => {
                 // If there were faulty sectors, add them to the response
                 if let Some(filecoin_proofs_api::StorageProofsError::FaultySectors(sectors)) =
-                    err.downcast_ref::<filecoin_proofs_api::StorageProofsError>()
+                err.downcast_ref::<filecoin_proofs_api::StorageProofsError>()
                 {
                     let sectors_u64 = sectors
                         .iter()
@@ -1919,7 +1959,7 @@ pub mod tests {
                 &alignment[..],
                 &buf_a[0..(piece_b_len - piece_b_prefix_len)],
             ]
-            .concat();
+                .concat();
 
             assert_eq!(
                 format!("{:x?}", &expected),

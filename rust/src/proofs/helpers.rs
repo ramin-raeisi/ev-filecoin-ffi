@@ -33,9 +33,19 @@ pub unsafe fn to_public_replica_info_map(
 ) -> Result<BTreeMap<SectorId, PublicReplicaInfo>> {
     use rayon::prelude::*;
 
-    if init_binded_threadpool().is_err() {
-        print!("Core-binded threadpool was already initialized");
-    };
+    if std::env::var("FIL_PROOFS_CORE_BINDED_THREADPOOL")
+        .and_then(|v| match v.parse() {
+            Ok(val) => Ok(val),
+            Err(_) => {
+                error!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
+                Ok(true)
+            }
+        })
+        .unwrap_or(true) {
+        if init_binded_threadpool().is_err() {
+            print!("Core-binded threadpool was already initialized");
+        };
+    }
 
     ensure!(!replicas_ptr.is_null(), "replicas_ptr must not be null");
 
@@ -83,9 +93,19 @@ pub unsafe fn to_private_replica_info_map(
 ) -> Result<BTreeMap<SectorId, PrivateReplicaInfo>> {
     use rayon::prelude::*;
 
-    if init_binded_threadpool().is_err() {
-        print!("Core-binded threadpool was already initialized");
-    };
+    if std::env::var("FIL_PROOFS_CORE_BINDED_THREADPOOL")
+        .and_then(|v| match v.parse() {
+            Ok(val) => Ok(val),
+            Err(_) => {
+                error!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
+                Ok(true)
+            }
+        })
+        .unwrap_or(true) {
+        if init_binded_threadpool().is_err() {
+            print!("Core-binded threadpool was already initialized");
+        };
+    }
 
     ensure!(!replicas_ptr.is_null(), "replicas_ptr must not be null");
 
