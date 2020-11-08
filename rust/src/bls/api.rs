@@ -97,7 +97,7 @@ pub unsafe extern "C" fn fil_aggregate(
         .and_then(|v| match v.parse() {
             Ok(val) => Ok(val),
             Err(_) => {
-                error!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
+                print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
                 Ok(true)
             }
         })

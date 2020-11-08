@@ -204,7 +204,7 @@ pub unsafe extern "C" fn fil_seal_pre_commit_phase1(
             .and_then(|v| match v.parse() {
                 Ok(val) => Ok(val),
                 Err(_) => {
-                    error!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
+                    print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
                     Ok(true)
                 }
             })
@@ -271,7 +271,7 @@ pub unsafe extern "C" fn fil_seal_pre_commit_phase2(
             .and_then(|v| match v.parse() {
                 Ok(val) => Ok(val),
                 Err(_) => {
-                    error!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
+                    print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
                     Ok(true)
                 }
             })
@@ -341,7 +341,7 @@ pub unsafe extern "C" fn fil_seal_commit_phase1(
             .and_then(|v| match v.parse() {
                 Ok(val) => Ok(val),
                 Err(_) => {
-                    error!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
+                    print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
                     Ok(true)
                 }
             })
@@ -411,7 +411,7 @@ pub unsafe extern "C" fn fil_seal_commit_phase2(
             .and_then(|v| match v.parse() {
                 Ok(val) => Ok(val),
                 Err(_) => {
-                    error!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
+                    print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
                     Ok(true)
                 }
             })
