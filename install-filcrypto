@@ -81,7 +81,7 @@ build_from_cpp_source() {
 
     pushd "${__cpp_sources_path}/build"
 
-    cmake -DCMAKE_BUILD_TYPE=${__release_type} -DBUILD_TESTS=TRUE -DBUILD_SHARED_LIBS=TRUE ..
+    cmake -DCMAKE_BUILD_TYPE=${__release_type} -DBUILD_TESTS=TRUE -DBUILD_SHARED_LIBS=TRUE -DBUILD_WITH_CUDA=FALSE ..
     cmake --build . --target tests-block -- -j$(nproc)
     cmake --build . --target tests-codec -- -j$(nproc)
     cmake --build . --target tests-hash -- -j$(nproc)
