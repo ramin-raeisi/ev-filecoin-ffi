@@ -4,7 +4,6 @@ use std::os::unix::io::FromRawFd;
 use std::sync::Once;
 
 use ffi_toolkit::{catch_panic_response, FCPResponseStatus, raw_ptr, rust_str_to_c_str};
-use rust_gpu_tools::*;
 
 use super::types::{fil_GpuDeviceResponse, fil_InitLogFdResponse};
 
@@ -36,23 +35,32 @@ pub fn init_log_with_file(file: File) -> Option<()> {
 #[no_mangle]
 pub unsafe extern "C" fn fil_get_gpu_devices() -> *mut fil_GpuDeviceResponse {
     catch_panic_response(|| {
-        let n = opencl::Device::all().unwrap().len();
-
-        let devices: Vec<*const libc::c_char> = opencl::Device::all().unwrap()
-            .iter()
-            .map(|d| d.name())
-            .map(|d| {
-                CString::new(d)
-                    .unwrap_or_else(|_| CString::new("Unknown").unwrap())
-                    .into_raw() as *const libc::c_char
-            })
-            .collect();
-
-        let dyn_array = Box::into_raw(devices.into_boxed_slice());
-
         let mut response = fil_GpuDeviceResponse::default();
-        response.devices_len = n;
-        response.devices_ptr = dyn_array as *const *const libc::c_char;
+        match rust_gpu_tools::opencl::Device::all() {
+            Ok(devices) => {
+                let n = devices.len();
+
+                let devices: Vec<*const libc::c_char> = devices
+                    .iter()
+                    .map(|d| d.name())
+                    .map(|d| {
+                        CString::new(d)
+                            .unwrap_or_else(|_| CString::new("Unknown").unwrap())
+                            .into_raw() as *const libc::c_char
+                    })
+                    .collect();
+
+                let dyn_array = Box::into_raw(devices.into_boxed_slice());
+
+                response.devices_len = n;
+                response.devices_ptr = dyn_array as *const *const libc::c_char;
+            }
+            Err(err) => {
+                response.status_code = FCPResponseStatus::FCPUnclassifiedError;
+                response.error_msg =
+                    rust_str_to_c_str(format!("Failed to retrieve device list: {}", err));
+            }
+        }
 
         raw_ptr(response)
     })
