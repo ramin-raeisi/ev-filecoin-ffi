@@ -28,6 +28,8 @@ anyhow = "1.0.23"
 bellperson = { git = "ssh://git@github.com/nilfoundation/fil-zk.git", branch = "master", features = ["gpu"] }
 serde_json = "1.0.46"
 thread_binder = "0.1.0"
+num_cpus = "1.13.0"
+rust-gpu-tools = "0.2.1"
 
 filecoin-proofs-api = { git = "ssh://git@github.com/nilfoundation/rust-filecoin-proofs-api.git", branch = "master", default-features = false }
 

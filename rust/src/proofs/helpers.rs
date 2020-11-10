@@ -37,11 +37,11 @@ pub unsafe fn to_public_replica_info_map(
         .and_then(|v| match v.parse() {
             Ok(val) => Ok(val),
             Err(_) => {
-                print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
-                Ok(true)
+                print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", false);
+                Ok(false)
             }
         })
-        .unwrap_or(true) {
+        .unwrap_or(false) {
         if init_binded_threadpool().is_err() {
             print!("Core-binded threadpool was already initialized");
         };
@@ -97,11 +97,11 @@ pub unsafe fn to_private_replica_info_map(
         .and_then(|v| match v.parse() {
             Ok(val) => Ok(val),
             Err(_) => {
-                print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
-                Ok(true)
+                print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", false);
+                Ok(false)
             }
         })
-        .unwrap_or(true) {
+        .unwrap_or(false) {
         if init_binded_threadpool().is_err() {
             print!("Core-binded threadpool was already initialized");
         };

@@ -204,11 +204,11 @@ pub unsafe extern "C" fn fil_seal_pre_commit_phase1(
             .and_then(|v| match v.parse() {
                 Ok(val) => Ok(val),
                 Err(_) => {
-                    print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
-                    Ok(true)
+                    print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", false);
+                    Ok(false)
                 }
             })
-            .unwrap_or(true) {
+            .unwrap_or(false) {
             if init_binded_threadpool().is_err() {
                 print!("Core-binded threadpool was already initialized");
             };
@@ -271,11 +271,11 @@ pub unsafe extern "C" fn fil_seal_pre_commit_phase2(
             .and_then(|v| match v.parse() {
                 Ok(val) => Ok(val),
                 Err(_) => {
-                    print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
-                    Ok(true)
+                    print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", false);
+                    Ok(false)
                 }
             })
-            .unwrap_or(true) {
+            .unwrap_or(false) {
             if init_binded_threadpool().is_err() {
                 print!("Core-binded threadpool was already initialized");
             };
@@ -341,11 +341,11 @@ pub unsafe extern "C" fn fil_seal_commit_phase1(
             .and_then(|v| match v.parse() {
                 Ok(val) => Ok(val),
                 Err(_) => {
-                    print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
-                    Ok(true)
+                    print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", false);
+                    Ok(false)
                 }
             })
-            .unwrap_or(true) {
+            .unwrap_or(false) {
             if init_binded_threadpool().is_err() {
                 print!("Core-binded threadpool was already initialized");
             };
@@ -411,11 +411,11 @@ pub unsafe extern "C" fn fil_seal_commit_phase2(
             .and_then(|v| match v.parse() {
                 Ok(val) => Ok(val),
                 Err(_) => {
-                    print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", true);
-                    Ok(true)
+                    print!("Invalid FIL_PROOFS_CORE_BINDED_THREADPOOL! Defaulting to {}", false);
+                    Ok(false)
                 }
             })
-            .unwrap_or(true) {
+            .unwrap_or(false) {
             if init_binded_threadpool().is_err() {
                 print!("Core-binded threadpool was already initialized");
             };
