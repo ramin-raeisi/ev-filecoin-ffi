@@ -36,16 +36,6 @@ main() {
     local __release_flags=$(get_release_flags)
     (echo >&2 "[install-filcrypto/main] building libfilcrypto from local sources (dir = ${cpp_sources_dir})")
 
-    build_from_cpp_source "filcrypto" "${cpp_sources_dir}" "Release"
-
-    # copy from CMake's build directory (target) to root of filecoin-ffi
-    #
-    #    find -L "${cpp_sources_dir}/build/release" -type f -name filcrypto.h -exec cp -- "{}" . \;
-    #    find -L "${cpp_sources_dir}/build/release" -type f -name libfilcrypto.a -exec cp -- "{}" . \;
-    #    find -L "${cpp_sources_dir}" -type f -name filcrypto.pc -exec cp -- "{}" . \;
-
-    # build libfilcrypto (and corresponding header and pkg-config)
-    #
     build_from_rust_source "filcrypto" "${rust_sources_dir}" "${__release_flags}"
 
     # copy from Rust's build directory (target) to root of filecoin-ffi
@@ -57,38 +47,6 @@ main() {
     check_installed_files
 
     (echo >&2 "[install-filcrypto/main] successfully built and installed libfilcrypto from source")
-}
-
-build_from_cpp_source() {
-    local __library_name=$1
-    local __cpp_sources_path=$2
-    local __release_type=$3
-    local __repo_sha1=$(git rev-parse HEAD)
-    local __repo_sha1_truncated="${__repo_sha1:0:16}"
-    local __target_feature=""
-
-    (echo >&2 "building from source @ ${__repo_sha1_truncated}")
-
-    if ! [ -x "$(command -v cmake)" ]; then
-        (echo >&2 '[build_from_cpp_source] Error: CMake is not installed.')
-        (echo >&2 '[build_from_cpp_source] install CMake (https://cmake.org) to resolve this problem.')
-        exit 1
-    fi
-
-    cmake --version
-
-    mkdir -p ${__cpp_sources_path}/build
-
-    pushd "${__cpp_sources_path}/build"
-
-    cmake -DCMAKE_BUILD_TYPE=${__release_type} -DBUILD_TESTS=TRUE -DBUILD_SHARED_LIBS=TRUE -DBUILD_WITH_CUDA=FALSE ..
-    cmake --build . --target tests-block -- -j$(nproc)
-    cmake --build . --target tests-codec -- -j$(nproc)
-    cmake --build . --target tests-hash -- -j$(nproc)
-    cmake --build . --target tests-stream -- -j$(nproc)
-    cmake --build . --target tests-core -- -j$(nproc)
-
-    popd
 }
 
 build_from_rust_source() {
