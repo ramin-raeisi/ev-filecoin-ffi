@@ -15,6 +15,7 @@ use std::slice::from_raw_parts;
 use super::helpers::{c_to_rust_post_proofs, to_private_replica_info_map, init_binded_threadpool};
 use super::types::*;
 use crate::util::api::init_log;
+use crate::proofs::helpers::init_gpu_pool;
 
 // A byte serialized representation of a vanilla proof.
 pub type VanillaProof = Vec<u8>;
@@ -214,6 +215,18 @@ pub unsafe extern "C" fn fil_seal_pre_commit_phase1(
             };
         }
 
+        if std::env::var("FIL_ZK_PRECOMPILE_GPU_CORES")
+            .and_then(|v| match v.parse() {
+                Ok(val) => Ok(val),
+                Err(_) => {
+                    print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", true);
+                    Ok(true)
+                }
+            })
+            .unwrap_or(true) {
+            init_gpu_pool();
+        }
+
         info!("seal_pre_commit_phase1: start");
 
         let public_pieces: Vec<PieceInfo> = from_raw_parts(pieces_ptr, pieces_len)
@@ -279,6 +292,18 @@ pub unsafe extern "C" fn fil_seal_pre_commit_phase2(
             if init_binded_threadpool().is_err() {
                 print!("Core-binded threadpool was already initialized");
             };
+        }
+
+        if std::env::var("FIL_ZK_PRECOMPILE_GPU_CORES")
+            .and_then(|v| match v.parse() {
+                Ok(val) => Ok(val),
+                Err(_) => {
+                    print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", true);
+                    Ok(true)
+                }
+            })
+            .unwrap_or(true) {
+            init_gpu_pool();
         }
 
         info!("seal_pre_commit_phase2: start");
@@ -351,6 +376,18 @@ pub unsafe extern "C" fn fil_seal_commit_phase1(
             };
         }
 
+        if std::env::var("FIL_ZK_PRECOMPILE_GPU_CORES")
+            .and_then(|v| match v.parse() {
+                Ok(val) => Ok(val),
+                Err(_) => {
+                    print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", true);
+                    Ok(true)
+                }
+            })
+            .unwrap_or(true) {
+            init_gpu_pool();
+        }
+
         info!("seal_commit_phase1: start");
 
         let mut response = fil_SealCommitPhase1Response::default();
@@ -419,6 +456,18 @@ pub unsafe extern "C" fn fil_seal_commit_phase2(
             if init_binded_threadpool().is_err() {
                 print!("Core-binded threadpool was already initialized");
             };
+        }
+
+        if std::env::var("FIL_ZK_PRECOMPILE_GPU_CORES")
+            .and_then(|v| match v.parse() {
+                Ok(val) => Ok(val),
+                Err(_) => {
+                    print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", true);
+                    Ok(true)
+                }
+            })
+            .unwrap_or(true) {
+            init_gpu_pool();
         }
 
         info!("seal_commit_phase2: start");

@@ -17,6 +17,16 @@ struct PublicReplicaInfoTmp {
     pub sector_id: u64,
 }
 
+#[cfg(feature = "gpu")]
+pub fn init_gpu_pool() {
+    let _ = &bellperson::gpu::DEVICE_POOL;
+}
+
+#[cfg(not(feature = "gpu"))]
+pub fn init_gpu_pool() {
+
+}
+
 pub fn init_binded_threadpool() -> Result<(), rayon::ThreadPoolBuildError> {
     use rayon::prelude::*;
     use thread_binder::ThreadPoolBuilder;
@@ -45,6 +55,18 @@ pub unsafe fn to_public_replica_info_map(
         if init_binded_threadpool().is_err() {
             print!("Core-binded threadpool was already initialized");
         };
+    }
+
+    if std::env::var("FIL_ZK_PRECOMPILE_GPU_CORES")
+        .and_then(|v| match v.parse() {
+            Ok(val) => Ok(val),
+            Err(_) => {
+                print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", true);
+                Ok(true)
+            }
+        })
+        .unwrap_or(true) {
+        init_gpu_pool();
     }
 
     ensure!(!replicas_ptr.is_null(), "replicas_ptr must not be null");
@@ -105,6 +127,18 @@ pub unsafe fn to_private_replica_info_map(
         if init_binded_threadpool().is_err() {
             print!("Core-binded threadpool was already initialized");
         };
+    }
+
+    if std::env::var("FIL_ZK_PRECOMPILE_GPU_CORES")
+        .and_then(|v| match v.parse() {
+            Ok(val) => Ok(val),
+            Err(_) => {
+                print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", true);
+                Ok(true)
+            }
+        })
+        .unwrap_or(true) {
+        init_gpu_pool();
     }
 
     ensure!(!replicas_ptr.is_null(), "replicas_ptr must not be null");

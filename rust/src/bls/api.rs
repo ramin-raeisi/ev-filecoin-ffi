@@ -14,7 +14,7 @@ use rayon::prelude::*;
 
 use crate::bls::types;
 use crate::proofs::types::fil_32ByteArray;
-use crate::proofs::helpers::init_binded_threadpool;
+use crate::proofs::helpers::{init_binded_threadpool, init_gpu_pool};
 
 pub const SIGNATURE_BYTES: usize = 96;
 pub const PRIVATE_KEY_BYTES: usize = 32;
@@ -105,6 +105,18 @@ pub unsafe extern "C" fn fil_aggregate(
         if init_binded_threadpool().is_err() {
             print!("Core-binded threadpool was already initialized");
         };
+    }
+
+    if std::env::var("FIL_ZK_PRECOMPILE_GPU_CORES")
+        .and_then(|v| match v.parse() {
+            Ok(val) => Ok(val),
+            Err(_) => {
+                print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", true);
+                Ok(true)
+            }
+        })
+        .unwrap_or(true) {
+        init_gpu_pool();
     }
 
     // prep request
