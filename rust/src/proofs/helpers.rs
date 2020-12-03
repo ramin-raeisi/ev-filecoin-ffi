@@ -19,7 +19,7 @@ struct PublicReplicaInfoTmp {
 
 #[cfg(feature = "gpu")]
 pub fn init_gpu_pool() {
-    let _ = &bellperson::gpu::DEVICE_POOL;
+    let _ = &bellperson::gpu::DEVICE_POOL.devices();
 }
 
 #[cfg(not(feature = "gpu"))]
