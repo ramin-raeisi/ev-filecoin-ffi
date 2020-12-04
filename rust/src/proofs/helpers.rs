@@ -22,14 +22,15 @@ struct PublicReplicaInfoTmp {
 #[cfg(feature = "gpu")]
 pub fn init_gpu_pool() {
     let _ = &bellperson::gpu::DEVICE_POOL.devices.iter().for_each(|d| {
-        info!("Initializing device: {} (Bus-id: {})", d.name(), d.bus_id());
+        info!("Initializing device: {} (Bus-id: {})",
+              d.lock().unwrap().device().name(),
+              d.lock().unwrap().device().bus_id()
+        );
     });
 }
 
 #[cfg(not(feature = "gpu"))]
-pub fn init_gpu_pool() {
-
-}
+pub fn init_gpu_pool() {}
 
 pub fn init_binded_threadpool() -> Result<(), rayon::ThreadPoolBuildError> {
     use rayon::prelude::*;
