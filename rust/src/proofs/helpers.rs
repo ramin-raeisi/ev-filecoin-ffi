@@ -19,7 +19,9 @@ struct PublicReplicaInfoTmp {
 
 #[cfg(feature = "gpu")]
 pub fn init_gpu_pool() {
-    let _ = &bellperson::gpu::DEVICE_POOL.devices();
+    let _ = &bellperson::gpu::DEVICE_POOL.devices.iter().for_each(|d| {
+        info!("Initializing device: {} (Bus-id: {})", d.name(), d.bus_id());
+    });
 }
 
 #[cfg(not(feature = "gpu"))]
