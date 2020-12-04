@@ -2,6 +2,8 @@ use std::collections::btree_map::BTreeMap;
 use std::path::PathBuf;
 use std::slice::from_raw_parts;
 
+use log::info;
+
 use anyhow::{ensure, Result};
 use ffi_toolkit::{c_str_to_pbuf, c_str_to_rust_str};
 use filecoin_proofs_api::{PrivateReplicaInfo, PublicReplicaInfo, SectorId};
