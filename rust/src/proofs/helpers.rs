@@ -33,7 +33,6 @@ pub fn init_gpu_pool() {
 pub fn init_gpu_pool() {}
 
 pub fn init_binded_threadpool() -> Result<(), rayon::ThreadPoolBuildError> {
-    use rayon::prelude::*;
     use thread_binder::ThreadPoolBuilder;
 
     ThreadPoolBuilder::new()
