@@ -24,7 +24,7 @@ pub fn init_gpu_pool() {
     let _ = &bellperson::gpu::DEVICE_POOL.devices.iter().for_each(|d| {
         info!("Initializing device: {} (Bus-id: {})",
               d.lock().unwrap().device().name(),
-              d.lock().unwrap().device().bus_id()
+              d.lock().unwrap().device().bus_id().unwrap()
         );
     });
 }
