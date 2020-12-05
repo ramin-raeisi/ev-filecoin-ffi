@@ -16,11 +16,6 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 #
 rust_sources_dir="rust"
 
-# tracks where the C++ sources are were we to build locally instead of
-# downloading from GitHub Releases
-#
-cpp_sources_dir="libs/cpp-fil-proofs"
-
 # an array of values passed as 'target-feature' to the Rust compiler if we're
 # building an optimized libfilcrypto (which takes advantage of some perf-boosting
 # instruction sets)
@@ -34,7 +29,7 @@ cpu_features_required_for_optimized_release=$(jq -r '.[].check_cpu_for_feature |
 
 main() {
     local __release_flags=$(get_release_flags)
-    (echo >&2 "[install-filcrypto/main] building libfilcrypto from local sources (dir = ${cpp_sources_dir})")
+    (echo >&2 "[install-filcrypto/main] building libfilcrypto from local sources (dir = ${rust_sources_dir})")
 
     build_from_rust_source "filcrypto" "${rust_sources_dir}" "${__release_flags}"
 
