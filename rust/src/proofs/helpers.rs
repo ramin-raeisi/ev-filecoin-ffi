@@ -66,11 +66,11 @@ pub unsafe fn to_public_replica_info_map(
         .and_then(|v| match v.parse() {
             Ok(val) => Ok(val),
             Err(_) => {
-                print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", true);
-                Ok(true)
+                print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", false);
+                Ok(false)
             }
         })
-        .unwrap_or(true) {
+        .unwrap_or(false) {
         init_gpu_pool();
     }
 
@@ -138,11 +138,11 @@ pub unsafe fn to_private_replica_info_map(
         .and_then(|v| match v.parse() {
             Ok(val) => Ok(val),
             Err(_) => {
-                print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", true);
-                Ok(true)
+                print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", false);
+                Ok(false)
             }
         })
-        .unwrap_or(true) {
+        .unwrap_or(false) {
         init_gpu_pool();
     }
 

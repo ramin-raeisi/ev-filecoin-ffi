@@ -5,7 +5,7 @@ use bls_signatures::{
     groupy::{CurveAffine, CurveProjective, EncodedPoint, GroupDecodingError},
     hash as hash_sig,
     paired::bls12_381::{G2Affine, G2Compressed},
-    verify as verify_sig, PrivateKey, PublicKey, Serialize, Signature,
+    PrivateKey, PublicKey, Serialize, Signature, verify as verify_sig,
 };
 use rand::rngs::OsRng;
 use rand::SeedableRng;
@@ -13,8 +13,8 @@ use rand_chacha::ChaChaRng;
 use rayon::prelude::*;
 
 use crate::bls::types;
-use crate::proofs::types::fil_32ByteArray;
 use crate::proofs::helpers::{init_binded_threadpool, init_gpu_pool};
+use crate::proofs::types::fil_32ByteArray;
 
 pub const SIGNATURE_BYTES: usize = 96;
 pub const PRIVATE_KEY_BYTES: usize = 32;
@@ -92,7 +92,6 @@ pub unsafe extern "C" fn fil_aggregate(
     flattened_signatures_ptr: *const u8,
     flattened_signatures_len: libc::size_t,
 ) -> *mut types::fil_AggregateResponse {
-
     if std::env::var("FIL_PROOFS_CORE_BINDED_THREADPOOL")
         .and_then(|v| match v.parse() {
             Ok(val) => Ok(val),
@@ -111,11 +110,11 @@ pub unsafe extern "C" fn fil_aggregate(
         .and_then(|v| match v.parse() {
             Ok(val) => Ok(val),
             Err(_) => {
-                print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", true);
-                Ok(true)
+                print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", false);
+                Ok(false)
             }
         })
-        .unwrap_or(true) {
+        .unwrap_or(false) {
         init_gpu_pool();
     }
 

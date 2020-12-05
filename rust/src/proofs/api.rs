@@ -219,11 +219,11 @@ pub unsafe extern "C" fn fil_seal_pre_commit_phase1(
             .and_then(|v| match v.parse() {
                 Ok(val) => Ok(val),
                 Err(_) => {
-                    print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", true);
-                    Ok(true)
+                    print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", false);
+                    Ok(false)
                 }
             })
-            .unwrap_or(true) {
+            .unwrap_or(false) {
             init_gpu_pool();
         }
 
@@ -298,11 +298,11 @@ pub unsafe extern "C" fn fil_seal_pre_commit_phase2(
             .and_then(|v| match v.parse() {
                 Ok(val) => Ok(val),
                 Err(_) => {
-                    print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", true);
-                    Ok(true)
+                    print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", false);
+                    Ok(false)
                 }
             })
-            .unwrap_or(true) {
+            .unwrap_or(false) {
             init_gpu_pool();
         }
 
@@ -380,11 +380,11 @@ pub unsafe extern "C" fn fil_seal_commit_phase1(
             .and_then(|v| match v.parse() {
                 Ok(val) => Ok(val),
                 Err(_) => {
-                    print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", true);
-                    Ok(true)
+                    print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", false);
+                    Ok(false)
                 }
             })
-            .unwrap_or(true) {
+            .unwrap_or(false) {
             init_gpu_pool();
         }
 
@@ -462,11 +462,11 @@ pub unsafe extern "C" fn fil_seal_commit_phase2(
             .and_then(|v| match v.parse() {
                 Ok(val) => Ok(val),
                 Err(_) => {
-                    print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", true);
-                    Ok(true)
+                    print!("Invalid FIL_ZK_PRECOMPILE_GPU_CORES! Defaulting to {}", false);
+                    Ok(false)
                 }
             })
-            .unwrap_or(true) {
+            .unwrap_or(false) {
             init_gpu_pool();
         }
 
