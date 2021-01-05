@@ -23,7 +23,7 @@ main() {
     local __rust_flags="--print native-static-libs ${RUSTFLAGS}"
 
     RUSTFLAGS="${__rust_flags}" \
-        cargo build --offline \
+        cargo build \
         --release ${@:3} 2>&1 | tee ${__build_output_log_tmp}
 
     # parse build output for linker flags
