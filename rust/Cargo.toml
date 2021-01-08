@@ -42,7 +42,7 @@ cbindgen = "= 0.14.0"
 tempfile = "3.0.8"
 
 [features]
-default = ["blst", "gpu"]
+default = ["pairing", "gpu"]
 gpu = ["filecoin-proofs-api/gpu", "bellperson/gpu"]
 pairing = ["filecoin-proofs-api/pairing", "bellperson/pairing"]
 blst = ["filecoin-proofs-api/blst", "bellperson/blst"]
